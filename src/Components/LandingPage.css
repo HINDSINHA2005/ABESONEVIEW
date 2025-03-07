@@ -1,0 +1,50 @@
+.landing-container {
+    background: linear-gradient(120deg, #4a00e0, #8e2de2);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: "Poppins", sans-serif;
+    color: white;
+  }
+  
+  .college-logo {
+    width: 120px;
+    height: auto;
+    filter: drop-shadow(2px 2px 10px rgba(255, 255, 255, 0.8));
+  }
+  
+  .subtitle {
+    font-size: 1.2rem;
+    font-weight: 300;
+  }
+  
+  /* Restore Previous Button Styles */
+  .faculty-btn {
+    background-color: #007bff;
+    color: white;
+    border-radius: 30px;
+    border: none;
+    font-size: 1rem;
+    padding: 10px 20px;
+  }
+  
+  .student-btn {
+    background-color: transparent;
+    color: white;
+    border: 2px solid white;
+    border-radius: 30px;
+    font-size: 1rem;
+    padding: 10px 20px;
+  }
+  
+  .faculty-btn:hover {
+    background-color: #0056b3;
+  }
+  
+  .student-btn:hover {
+    background-color: white;
+    color: #4a00e0;
+  }
+  

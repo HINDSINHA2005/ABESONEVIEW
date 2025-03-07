@@ -1,0 +1,115 @@
+/* General Container Styling */
+.student-login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+}
+
+/* Login Box */
+.login-box {
+  background: rgba(255, 255, 255, 0.1); /* Semi-transparent for glass effect */
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  width: 350px;
+  backdrop-filter: blur(10px);
+}
+
+/* College Logo */
+.college-logo {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 10px;
+}
+
+/* Titles */
+.college-name {
+  font-size: 20px;
+  font-weight: bold;
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.login-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+/* Form Styling */
+.form-group {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+label {
+  font-size: 14px;
+  font-weight: bold;
+  color: white;
+  margin-bottom: 5px;
+}
+
+/* Input Field Container */
+.input-container {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.2); /* Matching Faculty Login */
+  border-radius: 5px;
+  padding: 10px;
+}
+
+/* Bootstrap Icon Styling */
+.input-container i {
+  color: #ccc;
+  margin-right: 10px;
+  font-size: 18px;
+}
+
+/* Input Fields */
+.input-container input {
+  flex: 1;
+  background: transparent; /* Removes white box */
+  border: none;
+  outline: none;
+  color: white;
+  font-size: 16px;
+  padding: 5px;
+}
+
+/* Placeholder Text */
+.input-container input::placeholder {
+  color: #ddd;
+}
+
+/* Date Input */
+.input-container input[type="date"] {
+  appearance: none;
+}
+
+/* Error Messages */
+.text-danger {
+  font-size: 12px;
+  color: #ff6b6b;
+}
+
+/* Login Button */
+.custom-btn {
+  width: 100%;
+  background: #007bff;
+  border: none;
+  padding: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.custom-btn:hover {
+  background: #0056b3;
+}
