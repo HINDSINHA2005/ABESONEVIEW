@@ -69,6 +69,7 @@ const StudentLogin = () => {
           className="login-title"
         >
           Student Result
+         
         </motion.h2>
 
         <form onSubmit={handleSubmit}>
@@ -79,7 +80,7 @@ const StudentLogin = () => {
               <input
                 type="text"
                 className="form-control"
-                placeholder="Enter your Admission Number"
+                placeholder="Enter Admission No(lowercase)"
                 value={admissionNo}
                 onChange={(e) => setAdmissionNo(e.target.value)}
               />
