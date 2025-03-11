@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { db } from "../firebase";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs,query,orderBy } from "firebase/firestore";
 import { utils, writeFile } from "xlsx";
 
 
@@ -133,7 +133,8 @@ const Report = () => {
       try {
         setLoading(true);
         const studentCollection = collection(db, "students");
-        const studentSnapshot = await getDocs(studentCollection);
+         const q=query(studentCollection,orderBy("rollNo","asc"));
+        const studentSnapshot = await getDocs(q);
         const studentList = studentSnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data()

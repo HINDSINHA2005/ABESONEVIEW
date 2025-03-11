@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { db } from "../firebase";
-import { collection, getDocs, doc, setDoc } from "firebase/firestore";
+import { collection, getDocs, doc, setDoc, orderBy,query} from "firebase/firestore";
 import { useNavigate} from "react-router-dom";
 const FacultyMarksUpload = () => {
   const navigate = useNavigate();
@@ -32,7 +32,8 @@ const FacultyMarksUpload = () => {
   const fetchStudents = async () => {
     try {
       const studentsRef = collection(db, "students");
-      const studentSnap = await getDocs(studentsRef);
+      const q=query(studentsRef,orderBy("rollNo","asc"));
+      const studentSnap = await getDocs(q);
       let studentList = [];
 
       studentSnap.forEach((doc) => {

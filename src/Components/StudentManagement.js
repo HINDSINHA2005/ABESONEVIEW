@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { db } from "../firebase"; // Import Firebase setup
 import { useNavigate } from "react-router-dom";
-import { collection, addDoc, getDocs, deleteDoc, doc } from "firebase/firestore";
+import { collection, addDoc, getDocs, deleteDoc, doc,query,orderBy } from "firebase/firestore";
 import { Button, Table, Form } from "react-bootstrap";
 import '../Components/StudentMnagement.css'
 
@@ -35,7 +35,12 @@ const StudentManagement = () => {
   }, []);
 
   const fetchStudents = async () => {
-    const querySnapshot = await getDocs(collection(db, "students"));
+    const studentsRef = collection(db, "students"); // Reference to 'students' collection
+    const q = query(studentsRef, orderBy("rollNo", "asc")); // Order by rollNo
+
+    const querySnapshot = await getDocs(q);
+
+    //const querySnapshot = await getDocs(collection(db, "students"));
     const studentsList = querySnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
