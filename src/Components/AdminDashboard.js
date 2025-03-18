@@ -2,13 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../firebase";
-import { doc, getDoc, collection, getDocs } from "firebase/firestore";
+import {  collection, getDocs, query, where } from "firebase/firestore";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "./AdminDashboard.css";
 import FacultyManagement from "./FacultyManagement";
-
 
 const AdminDashboard = () => {
   const [admin, setAdmin] = useState(null);
@@ -21,22 +20,27 @@ const AdminDashboard = () => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         try {
-          const adminRef = doc(db, "admins", user.uid);
-          const adminSnap = await getDoc(adminRef);
-          if (adminSnap.exists()) {
-            setAdmin(adminSnap.data());
+          // Query admin data using email instead of UID
+          const q = query(collection(db, "admins"), where("email", "==", user.email));
+          const querySnapshot = await getDocs(q);
+
+          if (!querySnapshot.empty) {
+            const adminData = querySnapshot.docs[0].data();
+            setAdmin(adminData);
           } else {
-            //console.error("Admin not found in Firestore.");
+            console.error("Admin not found in Firestore.");
           }
-          fetchFacultyCount(); // Fetch initial faculty count
-          fetchStudentCount(); // Fetch initial student count
+
+          fetchFacultyCount();
+          fetchStudentCount();
         } catch (error) {
-          //console.error("Error fetching admin data:", error.message);
+          console.error("Error fetching admin data:", error.message);
         }
       } else {
         navigate("/admin-login");
       }
     });
+
     return () => unsubscribe();
   }, [navigate]);
 
@@ -58,7 +62,7 @@ const AdminDashboard = () => {
   return (
     <div className="admin-dashboard">
       <nav className="sidebar">
-        <h2 style={{"color":"white"}}>Admin Panel</h2>
+        <h2 style={{ color: "white" }}>Admin Panel</h2>
         <ul>
           <li onClick={() => navigate("/admin-dashboard")}>
             <i className="bi bi-house"></i> Home
@@ -91,10 +95,10 @@ const AdminDashboard = () => {
               <span>{admin?.role || "N/A"}</span>
             </div>
           </div>
-        </header> {/* Corrected: Added closing bracket here */}
+        </header>
 
         {location.pathname === "/admin-dashboard/faculty" ? (
-          <FacultyManagement onFacultyChange={fetchFacultyCount} /> // Pass fetchFacultyCount as prop
+          <FacultyManagement onFacultyChange={fetchFacultyCount} />
         ) : (
           <div className="stats">
             <div className="card">

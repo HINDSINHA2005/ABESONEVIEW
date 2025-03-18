@@ -91,7 +91,7 @@ const StudentResult = () => {
         onClick={() => navigate("/student-login")}
         style={{ padding: "10px 20px", backgroundColor: "green", color: "white", cursor: "pointer", border: "none", borderRadius: "5px", marginTop: "20px"}}
       >
-        Student Login
+        Search Again
       </button>
     </div>
   );
