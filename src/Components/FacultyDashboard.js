@@ -58,8 +58,11 @@ const FacultyDashboard = () => {
           <li>
             <i className="bi bi-house-door-fill"></i> Home
           </li>
-          <li>
-            <i className="bi bi-book-fill"></i> Subjects
+          <li onClick={() => navigate("/admin-report")}>
+            <i className="bi bi-book-fill"></i> Subject Report
+          </li>
+          <li onClick={() => navigate("/faculty-assignment")}>
+            <i className="bi bi-book-fill"></i> Upload Assignment Marks
           </li>
           <li onClick={() => navigate("/faculty/students")}> {/* Navigate to Students Page */}
             <i className="bi bi-people-fill"></i> Students

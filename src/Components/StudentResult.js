@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useParams ,useNavigate} from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { db } from "../firebase";
 import { collection, query, where, getDocs } from "firebase/firestore";
-import "../Components/StudentResult.css";
 
 const StudentResult = () => {
   const navigate = useNavigate();
-  const { admissionNo } = useParams(); // 🔥 Get admission number from URL dynamically
+  const { admissionNo } = useParams();
 
   const [student, setStudent] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -15,9 +14,6 @@ const StudentResult = () => {
   useEffect(() => {
     const fetchStudentData = async () => {
       try {
-        //console.log("🚀 Fetching Student Data...");
-        //console.log("🔹 Admission No:", admissionNo);
-
         if (!admissionNo) {
           setError("Invalid admission number.");
           setLoading(false);
@@ -29,15 +25,12 @@ const StudentResult = () => {
         const querySnapshot = await getDocs(q);
 
         if (!querySnapshot.empty) {
-          const studentDoc = querySnapshot.docs[0]; // Assuming unique admission numbers
+          const studentDoc = querySnapshot.docs[0];
           setStudent(studentDoc.data());
-          //console.log("🎉 Student Found:", studentDoc.data());
         } else {
-          //console.error("❌ Student Not Found!");
           setError("Student not found.");
         }
       } catch (error) {
-        //console.error("🔥 Error Fetching Student Data:", error);
         setError("Error fetching student data.");
       } finally {
         setLoading(false);
@@ -47,52 +40,66 @@ const StudentResult = () => {
     fetchStudentData();
   }, [admissionNo]);
 
-  if (loading) return <h2>Loading...</h2>;
-  if (error) return <div className="error">Error: {error}</div>;
-  if (!student) return <h2>No student data found.</h2>;
+  if (loading) return <h2 className="text-center mt-5">Loading...</h2>;
+  if (error) return <div className="alert alert-danger text-center">{error}</div>;
+  if (!student) return <h2 className="text-center">No student data found.</h2>;
 
   return (
-    <div className="container">
-      <div className="result-card">
-        <h2>Student Result</h2>
-        <div className="student-info">
-          <p><strong>Name:</strong> {student.name}</p>
-          <p><strong>Admission No:</strong> {student.admissionNo}</p>
-          <p><strong>Branch:</strong> {student.branch}</p>
-          <p><strong>Year:</strong> {student.year}</p>
-        </div>
+    <div
+      className="py-5"
+      style={{
+        minHeight: "100vh",
+        background: "linear-gradient(to right, #a1c4fd, #c2e9fb)",
+      }}
+    >
+      <div className="container">
+        <div className="bg-white shadow-lg rounded-4 p-4 mx-auto" style={{ maxWidth: "800px" }}>
+          <h2 className="text-center mb-4 text-primary fw-bold">📋 Student Result</h2>
 
-        <h3>Marks Table</h3>
-        <table className="result-table">
-          <thead>
-            <tr>
-              <th>Subject</th>
-              <th>Sessional 1</th>
-              <th>Sessional 2</th>
-              <th>Sessional 3</th>
-              <th>Internal Marks</th>
-            </tr>
-          </thead>
-          <tbody>
-            {student.marks &&
-              Object.entries(student.marks).map(([subject, marks]) => (
-                <tr key={subject}>
-                  <td>{subject}</td>
-                  <td>{marks["Sessional 1"] || "N/A"}</td>
-                  <td>{marks["Sessional 2"] || "N/A"}</td>
-                  <td>{marks["Sessional 3"] || "N/A"}</td>
-                  <td>{marks["Internal Marks"] || "N/A"}</td>
+          <div className="mb-4">
+            <p><strong>👤 Name:</strong> {student.name}</p>
+            <p><strong>🎓 Admission No:</strong> {student.admissionNo}</p>
+            <p><strong>🏫 Branch:</strong> {student.branch}</p>
+            <p><strong>📅 Year:</strong> {student.year}</p>
+          </div>
+
+          <h4 className="mb-3">📊 Marks Table</h4>
+          <div className="table-responsive">
+            <table className="table table-bordered table-striped text-center">
+              <thead className="table-light">
+                <tr>
+                  <th>Subject</th>
+                  <th>Sessional 1</th>
+                  <th>Sessional 2</th>
+                  <th>Sessional 3</th>
+                  <th>Internal Marks</th>
                 </tr>
-              ))}
-          </tbody>
-        </table>
+              </thead>
+              <tbody>
+                {student.marks &&
+                  Object.entries(student.marks).map(([subject, marks]) => (
+                    <tr key={subject}>
+                      <td>{subject}</td>
+                      <td>{marks["Sessional 1"] || "N/A"}</td>
+                      <td>{marks["Sessional 2"] || "N/A"}</td>
+                      <td>{marks["Sessional 3"] || "N/A"}</td>
+                      <td>{marks["Internal Marks"] || "N/A"}</td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="text-center mt-4">
+            <button
+              onClick={() => navigate("/student-login")}
+              className="btn btn-success px-4 py-2 rounded-pill"
+            >
+              🔍 Search Again
+            </button>
+          </div>
+        </div>
       </div>
-      <button
-        onClick={() => navigate("/student-login")}
-        style={{ padding: "10px 20px", backgroundColor: "green", color: "white", cursor: "pointer", border: "none", borderRadius: "5px", marginTop: "20px"}}
-      >
-        Search Again
-      </button>
     </div>
   );
 };

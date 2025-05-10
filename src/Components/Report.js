@@ -14,7 +14,7 @@ const Report = () => {
   const [error, setError] = useState(null);
   // Constants for grading
   const TOTAL_MARKS = 30;
-  const PASSING_PERCENTAGE = 40;
+  const PASSING_PERCENTAGE = 50;
 
   // Inline styles object to avoid CSS conflicts
   const styles = {
