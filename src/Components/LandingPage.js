@@ -63,7 +63,7 @@ const LandingPage = () => {
         </motion.button>
 
         <motion.button
-          className="btn btn-outline-light px-4 py-2"
+          className="btn btn-outline-light px-4 py-2 mx-2 my-2"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => setShowMore(!showMore)}
