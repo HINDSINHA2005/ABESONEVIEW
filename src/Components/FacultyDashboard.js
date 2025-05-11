@@ -65,7 +65,7 @@ const FacultyDashboard = () => {
             <i className="bi bi-book-fill"></i> Upload Assignment Marks
           </li>
           <li onClick={() => navigate("/faculty/students")}> {/* Navigate to Students Page */}
-            <i className="bi bi-people-fill"></i> Students
+            <i className="bi bi-people-fill"></i> Upload  Sessional Marks
           </li>
         </ul>
         <button className="logout-btn" onClick={handleLogout}>

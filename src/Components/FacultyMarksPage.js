@@ -1,7 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { db } from "../firebase";
-import { collection, getDocs, doc, setDoc, orderBy,query} from "firebase/firestore";
-import { useNavigate} from "react-router-dom";
+import { collection, getDocs, doc, setDoc, orderBy, query } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { Table, Form, Button, Container, Row, Col } from "react-bootstrap";
+
 const FacultyMarksUpload = () => {
   const navigate = useNavigate();
   const [subjects] = useState([
@@ -22,179 +26,149 @@ const FacultyMarksUpload = () => {
   const [sessionalType, setSessionalType] = useState("Sessional 1");
   const [students, setStudents] = useState([]);
   const [marks, setMarks] = useState({});
+  const inputRefs = useRef([]);
 
   useEffect(() => {
-    if (selectedSubject) {
-      fetchStudents();
-    }
+    if (selectedSubject) fetchStudents();
   }, [selectedSubject]);
 
   const fetchStudents = async () => {
     try {
-      const studentsRef = collection(db, "students");
-      const q=query(studentsRef,orderBy("rollNo","asc"));
-      const studentSnap = await getDocs(q);
-      let studentList = [];
-
-      studentSnap.forEach((doc) => {
-        studentList.push({ id: doc.id, ...doc.data() });
-      });
-
+      const q = query(collection(db, "students"), orderBy("rollNo", "asc"));
+      const snap = await getDocs(q);
+      const studentList = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
       setStudents(studentList);
-    } catch (error) {
-      console.error("Error fetching students:", error);
+    } catch (err) {
+      console.error("Error fetching students:", err);
     }
   };
 
-  const handleMarksChange = (studentId, value) => {
-    setMarks((prevMarks) => ({
-      ...prevMarks,
-      [studentId]: value,
-    }));
+  const handleMarksChange = (studentId, value, index) => {
+    const val = Math.min(100, Math.max(0, parseInt(value) || 0));
+    setMarks((prev) => ({ ...prev, [studentId]: val }));
+
+    // Navigate to next input on Enter key
+    if (index !== undefined) {
+      const nextRef = inputRefs.current[index + 1];
+      if (nextRef) nextRef.focus();
+    }
   };
 
   const handleSubmit = async () => {
-    if (!selectedSubject) {
-      alert("Please select a subject before uploading marks.");
-      return;
-    }
+    if (!selectedSubject) return alert("Select a subject first!");
 
     try {
       for (let studentId in marks) {
-        const studentDocRef = doc(db, "students", studentId);
-
-        await setDoc(
-          studentDocRef,
-          {
-            marks: {
-              [selectedSubject]: {
-                [sessionalType]: marks[studentId] || 0,
-              },
+        const ref = doc(db, "students", studentId);
+        await setDoc(ref, {
+          marks: {
+            [selectedSubject]: {
+              [sessionalType]: marks[studentId],
             },
           },
-          { merge: true }
-        );
+        }, { merge: true });
       }
-      alert("Marks uploaded successfully!");
+      alert("Marks uploaded!");
       setMarks({});
-    } catch (error) {
-      console.error("Error uploading marks:", error);
-      alert("Failed to upload marks. Please try again.");
+    } catch (err) {
+      console.error("Upload failed:", err);
+      alert("Error uploading marks.");
     }
   };
 
   return (
     <div
       style={{
-        background: "linear-gradient(135deg, #667eea, #764ba2)",
+        background: "linear-gradient(to right, #6a11cb, #2575fc)",
         minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        color: "black",
-        position: "relative",
+        padding: "40px 0",
+        color: "white",
       }}
     >
-      
-
-      <h2 style={{ marginBottom: "20px" }}>Upload Marks</h2>
-
-      <select
-        onChange={(e) => setSelectedSubject(e.target.value)}
-        value={selectedSubject}
-        style={{ padding: "10px", marginBottom: "10px", borderRadius: "5px" }}
+      <motion.div
+        initial={{ opacity: 0, y: -50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
       >
-        <option value="">Select Subject</option>
-        {subjects.map((sub, index) => (
-          <option key={index} value={sub}>
-            {sub}
-          </option>
-        ))}
-      </select>
+        <Container className="bg-white rounded p-4" style={{ maxWidth: "95%", color: "black" }}>
+          <h2 className="text-center mb-4">Faculty Marks Upload</h2>
 
-      <select
-        onChange={(e) => setSessionalType(e.target.value)}
-        value={sessionalType}
-        style={{ padding: "10px", marginBottom: "20px", borderRadius: "5px" }}
-      >
-        <option value="Sessional 1">Sessional 1</option>
-        <option value="Sessional 2">Sessional 2</option>
-        <option value="Sessional 3">Sessional 3</option>
-        <option value="Internal Marks">Internal Marks</option>
-      </select>
+          <Row className="mb-3">
+            <Col md={6}>
+              <Form.Select value={selectedSubject} onChange={(e) => setSelectedSubject(e.target.value)}>
+                <option value="">Select Subject</option>
+                {subjects.map((sub, idx) => (
+                  <option key={idx} value={sub}>{sub}</option>
+                ))}
+              </Form.Select>
+            </Col>
+            <Col md={6}>
+              <Form.Select value={sessionalType} onChange={(e) => setSessionalType(e.target.value)}>
+                {["Sessional 1", "Sessional 2", "Sessional 3", "Internal Marks"].map((type) => (
+                  <option key={type} value={type}>{type}</option>
+                ))}
+              </Form.Select>
+            </Col>
+          </Row>
 
-      {selectedSubject && students.length > 0 && (
-        <table
-          style={{
-            width: "80%",
-            textAlign: "center",
-            borderCollapse: "collapse",
-          
-            color: "black",
-            borderRadius: "10px",
-            overflow: "hidden",
-          }}
-        >
-          <thead>
-            <tr style={{ backgroundColor: "blue" }}>
-              <th style={{ padding: "10px" }}>Student Name</th>
-              <th style={{ padding: "10px" }}>Admission No</th>
-              <th style={{ padding: "10px" }}>Marks</th>
-            </tr>
-          </thead>
-          <tbody>
-            {students.map((student) => (
-              <tr key={student.id}>
-                <td style={{ padding: "10px", borderBottom: "1px solid #555" }}>{student.name}</td>
-                <td style={{ padding: "10px", borderBottom: "1px solid #555" }}>{student.admissionNo}</td>
-                <td style={{ padding: "10px", borderBottom: "1px solid #555" }}>
-                  <input
-                    type="number"
-                    min="0"
-                    max="100"
-                    value={marks[student.id] || ""}
-                    onChange={(e) => handleMarksChange(student.id, e.target.value)}
-                    style={{
-                      backgroundColor:"white",
-                      color:"black",
-                      fontWeight:"larger",
-                      padding: "5px",
-                      borderRadius: "5px",
-                      border: "none",
-                      textAlign: "center",
-                      width: "70px",
-                    }}
-                  />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+          {selectedSubject && (
+            <>
+              <div style={{ maxHeight: "400px", overflowY: "auto", border: "1px solid #ccc" }}>
+                <Table bordered hover responsive>
+                  <thead className="table-primary text-center sticky-top">
+                    <tr>
+                      <th>Roll No</th>
+                      <th>Name</th>
+                      <th>Admission No</th>
+                      <th>Marks (0-30/40)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {students.map((student, index) => (
+                      <tr key={student.id}>
+                        <td>{index + 1}</td>
+                        <td>{student.name}</td>
+                        <td>{student.admissionNo}</td>
+                        <td>
+                          <Form.Control
+                            type="number"
+                            min="0"
+                            max="100"
+                            value={marks[student.id] || ""}
+                            ref={(el) => inputRefs.current[index] = el}
+                            onChange={(e) => handleMarksChange(student.id, e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") {
+                                e.preventDefault();
+                                handleMarksChange(student.id, e.target.value, index);
+                              }
+                            }}
+                          />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </div>
 
-      <button
-        disabled={!selectedSubject || students.length === 0}
-        onClick={handleSubmit}
-        style={{
-          padding: "10px 20px",
-          marginTop: "20px",
-          borderRadius: "5px",
-          border: "none",
-          background: "#ff9800",
-          color: "black",
-          cursor: "pointer",
-          fontWeight: "bold",
-        }}
-      >
-        Upload Marks
-      </button>
-      <button
-        onClick={() => navigate("/faculty-login")}
-        style={{ padding: "10px 20px", backgroundColor: "green", color: "white", cursor: "pointer", border: "none", borderRadius: "5px", marginTop: "20px"}}
-      >
-        Home
-      </button>
+              <div className="d-flex justify-content-between align-items-center mt-3">
+                <div>Total Entries: {Object.keys(marks).length}</div>
+                <div>
+                  <Button
+                    variant="success"
+                    className="me-2"
+                    onClick={handleSubmit}
+                    disabled={students.length === 0 || !selectedSubject}
+                  >
+                    Upload Marks
+                  </Button>
+                  <Button variant="dark" onClick={() => navigate("/faculty-login")}>Home</Button>
+                </div>
+              </div>
+            </>
+          )}
+        </Container>
+      </motion.div>
     </div>
   );
 };
