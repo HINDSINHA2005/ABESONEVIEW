@@ -5,30 +5,43 @@ import { collection, query, where, getDocs } from "firebase/firestore";
 
 const StudentResult = () => {
   const navigate = useNavigate();
-  const { admissionNo } = useParams();
+  const { admissionNo, dob } = useParams();
 
   const [student, setStudent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Convert DOB from 'DD-MM-YYYY' to 'YYYY-MM-DD'
+  const formatDob = (dobInput) => {
+    const [day, month, year] = dobInput.split("-");
+    return `${year}-${month}-${day}`;
+  };
+
   useEffect(() => {
     const fetchStudentData = async () => {
       try {
-        if (!admissionNo) {
-          setError("Invalid admission number.");
+        if (!admissionNo || !dob) {
+          setError("Missing admission number or date of birth.");
           setLoading(false);
           return;
         }
 
+        const formattedDob = formatDob(dob);
+        const formattedAdmissionNo = admissionNo.toLowerCase().trim();
+
         const studentsCollection = collection(db, "students");
-        const q = query(studentsCollection, where("admissionNo", "==", admissionNo.trim()));
+        const q = query(
+          studentsCollection,
+          where("admissionNo", "==", formattedAdmissionNo),
+          where("dob", "==", formattedDob)
+        );
         const querySnapshot = await getDocs(q);
 
         if (!querySnapshot.empty) {
           const studentDoc = querySnapshot.docs[0];
           setStudent(studentDoc.data());
         } else {
-          setError("Student not found.");
+          setError("Student not found or DOB does not match.");
         }
       } catch (error) {
         setError("Error fetching student data.");
@@ -38,7 +51,7 @@ const StudentResult = () => {
     };
 
     fetchStudentData();
-  }, [admissionNo]);
+  }, [admissionNo, dob]);
 
   if (loading) return <h2 className="text-center mt-5">Loading...</h2>;
   if (error) return <div className="alert alert-danger text-center">{error}</div>;

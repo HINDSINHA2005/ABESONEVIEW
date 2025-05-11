@@ -80,7 +80,7 @@ const StudentLogin = () => {
               <input
                 type="text"
                 className="form-control"
-                placeholder="Enter Admission No(lowercase)"
+                placeholder="Enter Admission No:"
                 value={admissionNo}
                 onChange={(e) => setAdmissionNo(e.target.value)}
               />
@@ -95,6 +95,7 @@ const StudentLogin = () => {
               <input
                 type="date"
                 className="form-control"
+                 placeholder="dd-mm-yyyy"
                 value={dob}
                 onChange={(e) => setDob(e.target.value)}
               />
