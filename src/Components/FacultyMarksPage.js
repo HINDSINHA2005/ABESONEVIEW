@@ -44,15 +44,15 @@ const FacultyMarksUpload = () => {
   };
 
   const handleMarksChange = (studentId, value, index) => {
-    const val = Math.min(100, Math.max(0, parseInt(value) || 0));
-    setMarks((prev) => ({ ...prev, [studentId]: val }));
+  const val = Math.min(100, Math.max(0, parseFloat(value) || 0));
+  setMarks((prev) => ({ ...prev, [studentId]: val }));
 
-    // Navigate to next input on Enter key
-    if (index !== undefined) {
-      const nextRef = inputRefs.current[index + 1];
-      if (nextRef) nextRef.focus();
-    }
-  };
+  // Navigate to next input on Enter key
+  if (index !== undefined) {
+    const nextRef = inputRefs.current[index + 1];
+    if (nextRef) nextRef.focus();
+  }
+};
 
   const handleSubmit = async () => {
     if (!selectedSubject) return alert("Select a subject first!");
@@ -134,6 +134,7 @@ const FacultyMarksUpload = () => {
                             type="number"
                             min="0"
                             max="100"
+                            step="0.01"
                             value={marks[student.id] || ""}
                             ref={(el) => inputRefs.current[index] = el}
                             onChange={(e) => handleMarksChange(student.id, e.target.value)}
@@ -152,7 +153,7 @@ const FacultyMarksUpload = () => {
               </div>
 
               <div className="d-flex justify-content-between align-items-center mt-3">
-                <div>Total Entries: {Object.keys(marks).length}</div>
+                <div>Total Entries: {Object.keys(marks).length} Wait to 10 sec to For Upload</div>
                 <div>
                   <Button
                     variant="success"
