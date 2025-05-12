@@ -75,6 +75,8 @@ export default function HomeAchievements() {
                     <li><strong>🆔 Roll No:</strong> {a.rollNo}</li>
                     <li><strong>🎓 Branch:</strong> {a.branch}</li>
                     <li><strong>📅 Year:</strong> {a.year}</li>
+                     <li><strong>📅Sem:</strong> {a.semester}</li>
+
                   </ul>
 
                   

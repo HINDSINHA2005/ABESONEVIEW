@@ -11,9 +11,11 @@ const StudentUploadAchievement = () => {
     admissionNo: '',
     branch: '',
     year: '',
+    semester:'',
     title: '',
     description: '',
     driveLink: '',
+    
   });
 
   const [error, setError] = useState('');
@@ -51,9 +53,11 @@ const StudentUploadAchievement = () => {
         admissionNo: '',
         branch: '',
         year: '',
+        semester:'',
         title: '',
         description: '',
         driveLink: '',
+        
       });
       alert('Achievement submitted successfully!');
     } catch (err) {
@@ -98,6 +102,20 @@ const StudentUploadAchievement = () => {
               <option value="2nd Year">2nd Year</option>
               <option value="3rd Year">3rd Year</option>
               <option value="4th Year">4th Year</option>
+            </select>
+          </div>
+          <div className="col-md-6">
+            <label className="form-label">Semester</label>
+            <select name="semester" value={formData.semester} onChange={handleChange} className="form-select" required>
+              <option value="">Select semester</option>
+              <option value="1st">1st </option>
+              <option value="2nd">2nd </option>
+              <option value="3rd">3rd </option>
+              <option value="4th">4th </option>
+              <option value="5th">5th </option>
+              <option value="6th">6th </option>
+              <option value="7th">7th </option>
+              <option value="8th">8th </option>
             </select>
           </div>
           <div className="col-md-6">

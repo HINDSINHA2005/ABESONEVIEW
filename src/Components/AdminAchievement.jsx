@@ -88,6 +88,8 @@ const AdminAchievement = () => {
                       <li><strong>🆔 Roll No:</strong> {a.rollNo}</li>
                       <li><strong>🏫 Branch:</strong> {a.branch}</li>
                       <li><strong>📅 Year:</strong> {a.year}</li>
+                      <li><strong>📅 Semester:</strong> {a.semester}</li>
+
                       <li>
                         <strong>Status:</strong>{' '}
                         <span className={`badge ${getStatusBadge(a.status)}`}>{a.status}</span>
