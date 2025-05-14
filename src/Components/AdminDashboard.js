@@ -75,6 +75,9 @@ const AdminDashboard = () => {
           <li onClick={() => navigate("/achievement-verify")}>
             <i className="bi bi-file-earmark-text"></i> Achievement verification
           </li>
+          <li onClick={() => navigate("/generate-internal")}>
+            <i className="bi bi-file-earmark-text"></i> Generate Internal Marks
+          </li>
         
         
          

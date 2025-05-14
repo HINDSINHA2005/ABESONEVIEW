@@ -19,6 +19,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import HomeAchievements from "./Components/HomeAchievements";
 import StudentUploadAchievement from "./Components/StudentUploadAchievement";
 import AdminAchievement from "./Components/AdminAchievement";
+import InternalMarksGenerator from "./Components/InternalMarksGenerator";
 
 
 
@@ -59,6 +60,7 @@ const MainRoutes = () => {
       <Route path="/admin-dashboard" element={<PrivateRoute><AdminDashboard /></PrivateRoute>} />
       <Route path="/admin-dashboard/faculty" element={<PrivateRoute><FacultyManagement /></PrivateRoute>} />
       <Route path="/admin-dashboard/students" element={<PrivateRoute><StudentManagement /></PrivateRoute>} />
+      <Route path="/generate-internal" element={<InternalMarksGenerator/>}/>
       
       <Route path="/faculty-dashboard" element={<FacultyDashboard />} />
       
