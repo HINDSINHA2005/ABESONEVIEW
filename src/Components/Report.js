@@ -336,6 +336,7 @@ const Report = () => {
               <option value="Sessional 1">Sessional 1</option>
               <option value="Sessional 2">Sessional 2</option>
               <option value="Sessional 3">Sessional 3</option>
+              <option value="Internal Marks">Internal Marks</option>
             </select>
           </div>
         </div>
