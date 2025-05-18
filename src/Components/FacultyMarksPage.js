@@ -3,8 +3,9 @@ import { db } from "../firebase";
 import { collection, getDocs, doc, setDoc, orderBy, query } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import * as XLSX from "xlsx";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Table, Form, Button, Container, Row, Col } from "react-bootstrap";
+import { Table, Form, Button, Container, Row, Col, Spinner } from "react-bootstrap";
 
 const FacultyMarksUpload = () => {
   const navigate = useNavigate();
@@ -27,6 +28,7 @@ const FacultyMarksUpload = () => {
   const [students, setStudents] = useState([]);
   const [marks, setMarks] = useState({});
   const inputRefs = useRef([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (selectedSubject) fetchStudents();
@@ -44,29 +46,31 @@ const FacultyMarksUpload = () => {
   };
 
   const handleMarksChange = (studentId, value, index) => {
-  const val = Math.min(100, Math.max(0, parseFloat(value) || 0));
-  setMarks((prev) => ({ ...prev, [studentId]: val }));
-
-  // Navigate to next input on Enter key
-  if (index !== undefined) {
-    const nextRef = inputRefs.current[index + 1];
-    if (nextRef) nextRef.focus();
-  }
-};
+    const val = Math.min(100, Math.max(0, parseFloat(value) || 0));
+    setMarks((prev) => ({ ...prev, [studentId]: val }));
+    if (index !== undefined) {
+      const nextRef = inputRefs.current[index + 1];
+      if (nextRef) nextRef.focus();
+    }
+  };
 
   const handleSubmit = async () => {
     if (!selectedSubject) return alert("Select a subject first!");
-
+    setLoading(true);
     try {
       for (let studentId in marks) {
         const ref = doc(db, "students", studentId);
-        await setDoc(ref, {
-          marks: {
-            [selectedSubject]: {
-              [sessionalType]: marks[studentId],
+        await setDoc(
+          ref,
+          {
+            marks: {
+              [selectedSubject]: {
+                [sessionalType]: marks[studentId],
+              },
             },
           },
-        }, { merge: true });
+          { merge: true }
+        );
       }
       alert("Marks uploaded!");
       setMarks({});
@@ -74,6 +78,51 @@ const FacultyMarksUpload = () => {
       console.error("Upload failed:", err);
       alert("Error uploading marks.");
     }
+    setLoading(false);
+  };
+
+  const handleExcelDownload = () => {
+    const data = students.map((stu) => ({
+      RollNo: stu.rollNo,
+      Name: stu.name,
+      AdmissionNo: stu.admissionNo,
+      Marks: marks[stu.id] || "",
+    }));
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Marks");
+    XLSX.writeFile(wb, "marks_template.xlsx");
+  };
+
+  const handleExcelUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      const bstr = evt.target.result;
+      const wb = XLSX.read(bstr, { type: "binary" });
+      const sheet = wb.Sheets[wb.SheetNames[0]];
+      const data = XLSX.utils.sheet_to_json(sheet);
+
+      const updatedMarks = {};
+      const notFound = [];
+      data.forEach((row) => {
+        const stu = students.find((s) => s.rollNo === row.RollNo);
+        if (stu && row.Marks !== undefined && row.Marks !== "") {
+          updatedMarks[stu.id] = parseFloat(row.Marks);
+        } else if (!stu) {
+          notFound.push(row.RollNo);
+        }
+      });
+
+      setMarks((prev) => ({ ...prev, ...updatedMarks }));
+
+      if (notFound.length) {
+        alert("Some RollNos not found: " + notFound.join(", "));
+      }
+    };
+    reader.readAsBinaryString(file);
   };
 
   return (
@@ -94,7 +143,7 @@ const FacultyMarksUpload = () => {
           <h2 className="text-center mb-4">Faculty Marks Upload</h2>
 
           <Row className="mb-3">
-            <Col md={6}>
+            <Col md={4}>
               <Form.Select value={selectedSubject} onChange={(e) => setSelectedSubject(e.target.value)}>
                 <option value="">Select Subject</option>
                 {subjects.map((sub, idx) => (
@@ -102,12 +151,15 @@ const FacultyMarksUpload = () => {
                 ))}
               </Form.Select>
             </Col>
-            <Col md={6}>
+            <Col md={4}>
               <Form.Select value={sessionalType} onChange={(e) => setSessionalType(e.target.value)}>
                 {["Sessional 1", "Sessional 2", "Sessional 3", "Internal Marks"].map((type) => (
                   <option key={type} value={type}>{type}</option>
                 ))}
               </Form.Select>
+            </Col>
+            <Col md={4}>
+              <Form.Control type="file" accept=".xlsx,.xls" onChange={handleExcelUpload} />
             </Col>
           </Row>
 
@@ -126,7 +178,7 @@ const FacultyMarksUpload = () => {
                   <tbody>
                     {students.map((student, index) => (
                       <tr key={student.id}>
-                        <td>{index + 1}</td>
+                        <td>{student.rollNo}</td>
                         <td>{student.name}</td>
                         <td>{student.admissionNo}</td>
                         <td>
@@ -153,15 +205,16 @@ const FacultyMarksUpload = () => {
               </div>
 
               <div className="d-flex justify-content-between align-items-center mt-3">
-                <div>Total Entries: {Object.keys(marks).length} Wait to 10 sec to For Upload</div>
+                <div>Total Entries: {Object.keys(marks).length}</div>
                 <div>
+                  <Button variant="secondary" className="me-2" onClick={handleExcelDownload}>Download Blank Excel</Button>
                   <Button
                     variant="success"
                     className="me-2"
                     onClick={handleSubmit}
-                    disabled={students.length === 0 || !selectedSubject}
+                    disabled={loading || students.length === 0 || !selectedSubject}
                   >
-                    Upload Marks
+                    {loading ? (<><Spinner animation="border" size="sm" /> Uploading...</>) : "Upload Marks"}
                   </Button>
                   <Button variant="dark" onClick={() => navigate("/faculty-login")}>Home</Button>
                 </div>

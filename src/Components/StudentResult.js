@@ -68,6 +68,7 @@ const StudentResult = () => {
       <div className="container">
         <div className="bg-white shadow-lg rounded-4 p-4 mx-auto" style={{ maxWidth: "800px" }}>
           <h2 className="text-center mb-4 text-primary fw-bold">📋 Student Result</h2>
+          
 
           <div className="mb-4">
             <p><strong>👤 Name:</strong> {student.name}</p>
@@ -110,6 +111,8 @@ const StudentResult = () => {
             >
               🔍 Search Again
             </button>
+            <br></br>
+            <h6 className="text-center">Note: Assignment and Quiz marks are assumed to be out of 15 as a fixed maximum. Actual marks may vary slightly (typically 2–3 marks less) based on evaluation criteria. The site owner is not responsible for any discrepancies or errors in the displayed marks.</h6>
           </div>
         </div>
       </div>
