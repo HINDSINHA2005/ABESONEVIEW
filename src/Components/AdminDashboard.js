@@ -78,6 +78,12 @@ const AdminDashboard = () => {
           <li onClick={() => navigate("/generate-internal")}>
             <i className="bi bi-file-earmark-text"></i> Generate Internal Marks
           </li>
+          <li onClick={() => navigate("/QUIZ")}>
+            <i className="bi bi-file-earmark-text"></i> QUIZ MARKS MANAGEMENT
+          </li>
+          <li onClick={() => navigate("/QUIZMARKS")}>
+            <i className="bi bi-file-earmark-text"></i> QUIZ MARKS 
+          </li>
         
         
          

@@ -61,11 +61,18 @@ const FacultyDashboard = () => {
           <li onClick={() => navigate("/admin-report")}>
             <i className="bi bi-book-fill"></i> Subject Report
           </li>
-          <li onClick={() => navigate("/faculty-assignment")}>
-            <i className="bi bi-book-fill"></i> Upload Assignment Marks
+          <li onClick={() => navigate("/QUIZ")}>
+            <i className="bi bi-file-earmark-text"></i> Upload Quiz Marks
           </li>
+          <li onClick={() => navigate("/ASSIGN")}>
+            <i className="bi bi-file-earmark-text"></i> Assignment Management
+          </li>
+          <li onClick={() => navigate("/QUIZMARKS")}>
+            <i className="bi bi-file-earmark-text"></i> See Quiz Marks
+          </li>
+
           <li onClick={() => navigate("/faculty/students")}> {/* Navigate to Students Page */}
-            <i className="bi bi-people-fill"></i> Upload  Sessional Marks
+            <i className="bi bi-file-earmark-text"></i> Upload  Sessional Marks
           </li>
         </ul>
         <button className="logout-btn" onClick={handleLogout}>
@@ -77,8 +84,8 @@ const FacultyDashboard = () => {
         <div className="header">
           <h2>Welcome, {facultyData.name}</h2>
           <div className="user-info">
-            <i className="bi bi-person-circle"></i>
-            <span>{facultyData.email}</span>
+            <i className="bi bi-person-circle" style={{ color: 'blue' }}></i>
+            <span style={{ color: 'blue' }}>{facultyData.email}</span>
           </div>
         </div>
 

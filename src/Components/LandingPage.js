@@ -59,9 +59,25 @@ const LandingPage = () => {
           whileTap={{ scale: 0.95 }}
           onClick={() => navigate("/student-login")}
         >
-          Students Result
+          Sessional Result
+        </motion.button>
+        <motion.button
+          className="btn btn-light px-3 py-2"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => navigate("/QuizResult")}
+        >
+          Quiz Results{" "}
         </motion.button>
 
+         <motion.button
+          className="btn btn-light px-3 py-2 me-2 ms-3"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => navigate("/ASSIGNR")}
+        >
+          Assignment Status{" "}
+        </motion.button>
         <motion.button
           className="btn btn-outline-light px-4 py-2 mx-2 my-2"
           whileHover={{ scale: 1.05 }}
@@ -83,7 +99,12 @@ const LandingPage = () => {
             className="btn btn-secondary px-3 py-2"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => window.open("https://oneview.aktu.ac.in/WebPages/AKTU/OneView.aspx", "_blank")}
+            onClick={() =>
+              window.open(
+                "https://oneview.aktu.ac.in/WebPages/AKTU/OneView.aspx",
+                "_blank"
+              )
+            }
           >
             University Results
           </motion.button>
@@ -92,7 +113,9 @@ const LandingPage = () => {
             className="btn btn-info px-3 py-2"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => window.open("https://abesquiz.netlify.app/", "_blank")}
+            onClick={() =>
+              window.open("https://abesquiz.netlify.app/", "_blank")
+            }
           >
             ABES Quiz
           </motion.button>
@@ -101,7 +124,9 @@ const LandingPage = () => {
             className="btn btn-warning px-3 py-2"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => window.open("https://abes.web.simplifii.com/index.php")}
+            onClick={() =>
+              window.open("https://abes.web.simplifii.com/index.php")
+            }
           >
             Attendance
           </motion.button>
@@ -110,7 +135,12 @@ const LandingPage = () => {
             className="btn btn-primary px-3 py-2"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => window.open("https://exams.aktu.ac.in/studentlogin.aspx", "_blank")}
+            onClick={() =>
+              window.open(
+                "https://exams.aktu.ac.in/studentlogin.aspx",
+                "_blank"
+              )
+            }
           >
             Fill Exam Form
           </motion.button>

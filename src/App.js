@@ -20,6 +20,11 @@ import HomeAchievements from "./Components/HomeAchievements";
 import StudentUploadAchievement from "./Components/StudentUploadAchievement";
 import AdminAchievement from "./Components/AdminAchievement";
 import InternalMarksGenerator from "./Components/InternalMarksGenerator";
+import QuizUploadPage from "./Components/QuizUploadPage";
+import QuizMarksTable from "./Components/QuizMarksTable";
+import ResultPage from "./Components/ResultPage";
+import AssignmentManagement from "./Components/AssignmentManagement";
+import AssignmentResult from "./Components/AssignmentResult";
 
 
 
@@ -61,16 +66,21 @@ const MainRoutes = () => {
       <Route path="/admin-dashboard/faculty" element={<PrivateRoute><FacultyManagement /></PrivateRoute>} />
       <Route path="/admin-dashboard/students" element={<PrivateRoute><StudentManagement /></PrivateRoute>} />
       <Route path="/generate-internal" element={<InternalMarksGenerator/>}/>
+      <Route path="/QUIZ" element={<QuizUploadPage/>}/>
+      <Route path="/QUIZMARKS" element={<QuizMarksTable/>}/>
       
       <Route path="/faculty-dashboard" element={<FacultyDashboard />} />
       
       <Route path="/faculty-assignment" element={<SubjectAssignment/>}/>
       <Route path="/faculty/students" element={<FacultyMarksPage/>} />
+      <Route path="/ASSIGN" element={<AssignmentManagement/>}/>
+       <Route path="/ASSIGNR" element={<AssignmentResult/>}/>
      
 
       <Route path="/uploadmarks" element={<UploadMarks/>} />
       <Route path="/student-result/:admissionNo/:dob" element={<StudentResult />} />
       <Route path="/achievements" element={<HomeAchievements/>}/>
+      <Route path="/QuizResult" element={<ResultPage/>}/>
       <Route path="/file-achievements" element={<StudentUploadAchievement/>}/>
 
 
