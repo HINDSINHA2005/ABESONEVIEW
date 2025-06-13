@@ -62,7 +62,7 @@ const LandingPage = () => {
           Sessional Result
         </motion.button>
         <motion.button
-          className="btn btn-light px-3 py-2"
+          className="btn btn-light px-3 py-2  mt-2 mb-2"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => navigate("/QuizResult")}
@@ -71,7 +71,7 @@ const LandingPage = () => {
         </motion.button>
 
          <motion.button
-          className="btn btn-light px-3 py-2 me-2 ms-3"
+          className="btn btn-light px-3 py-2 me-2 ms-3 mt-1 mb-2"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => navigate("/ASSIGNR")}
